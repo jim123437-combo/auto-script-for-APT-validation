@@ -8,4 +8,4 @@
 -Line 5th:Threshold for small pictures.(Integer Number(KB))
 3.run "python test.py"
 
-Notes:Tags with utf-8 support only.
+Notes: Tags with utf-8 support only.
