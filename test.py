@@ -1,10 +1,9 @@
-from pywinauto.application import Application
-from PIL import Image
-from PIL import ExifTags
 import os
-from time import sleep
 import shutil
 import pathlib
+from pywinauto.application import Application
+from PIL import Image,ExifTags
+from pyautogui import *
 
 def takeSeq(elem):
     return elem[0]
@@ -72,16 +71,18 @@ get_tags(raw_tags_list,raw_tmp_dir)
 print("\nAPT is running...\nPlease Wait......\n")
 
 app = Application(backend = 'uia').start(APT_exe_path)
-app.dialog.Options.click()
 
+app['dialog'].Options.click()
 app.dialog.dialog2.sensitivitycombobox.select(Sensitivity_conf)
-
 Ignore_Status = app.dialog.dialog2.checkbox0.get_toggle_state()
+
 if(Ignore_Status != Ignore_small_pic):
     app.dialog.dialog2.checkbox0.toggle()
     Ignore_status = Ignore_small_pic
+
 if(Ignore_small_pic):
     app.dialog.dialog2.edit.set_text(Threshold)
+
 app.dialog.dialog2.ok.click()
 
 app.dialog.add.click()
@@ -91,7 +92,10 @@ app.dialog.Analyze.click()
 
 app.dialog.dialog2.wait('enabled',timeout=10000000)
 
+time_cost_shot = screenshot('timecost.png')
+
 app.dialog.dialog2.OK.click()
+
 app.dialog.SaveTags.click()
 app.dialog.dialog2.yes.click()
 
@@ -109,7 +113,7 @@ print("\nAnalysis finished!\n")
 print('\nOutputing result...\n')
 
 count = 0
-#res_txt = open(os.path.join(os.path.expandvars("%userprofile%"),"Desktop\\res.txt"),'w')
+
 res_txt = open(('res.txt'),'w')
 
 for x,y in zip(raw_tags_list,APT_tags_list):
@@ -126,4 +130,4 @@ res_txt.write('Accuracy Rate = '+str(acc*100)+r'%'+'\n')
 shutil.rmtree(raw_tmp_dir)
 shutil.rmtree(APT_tmp_dir)
 
-print('\nResult has been successfully saved to '+r'{}'.format(os.getcwd()+'\\res.txt')+'\n')
+print('\nResult has been successfully saved to '+r'{}'.format(os.getcwd())+'\n')
